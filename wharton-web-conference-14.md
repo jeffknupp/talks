@@ -1,4 +1,4 @@
-## Automated Building of RESTful API Services in Python
+# Automated Building of RESTful API Services in Python
 
 * Jeff Knupp
 * @jeffknupp
@@ -10,10 +10,10 @@
 
 ## Jeff Knupp?
 
-* Author of “Writing Idiomatic Python”
-* Full-time Python developer @ AppNexus
-* Blogger at jeffknupp.com
-* Creator of the “sandman” Python library
+* Author of “Writing Idiomatic Python”  <!-- .element: class="fragment" data-fragment-index="1" -->
+* Full-time Python developer @ AppNexus  <!-- .element: class="fragment" data-fragment-index="2" -->
+* Blogger at jeffknupp.com <!-- .element: class="fragment" data-fragment-index="3" -->
+* Creator of the “sandman” Python library <!-- .element: class="fragment" data-fragment-index="4" -->
 
 
 
@@ -27,7 +27,7 @@ Seven letters. Two acronyms. Buy what does it mean?
 
 ## API: Application Programming Interface
 
-Programatic way of interact with a third-party system.
+Programmatic way of interacting with a third-party system.
 
 Note:
 Example: "I used Twitter's API to build a tool to see if anyone is bad-mouthing
@@ -35,7 +35,6 @@ me online."
 
 Translation: I wrote a program that interacts with a program on Twitter's side
 built to *interface* with Twitter's information systems.
-
 
 
 
@@ -48,9 +47,25 @@ Way to interact with APIs over HTTP (the communication protocol the Internet is 
 Includes set of design principles and best practices for designing systems meant to
 be "RESTful".
 
-Note: 
+
+
+
+## REST: Representational State Transfer (continued)
+
+In RESTful systems, application state is manipulated by the client interacting
+with hyperlinks. A root link (e.g. http://example.com/api/) describes what actions can be taken by listing
+resources and state as hyperlinks. 
+
+Note: Each time the client follows a link, the server informs it
+where it can go (what actions it can take) from its current location via
+links. Clients use traditional HTTP methods to take actions on the references.
+The server is stateless, meaning no client context data is stored between
+requests.
 HTTP has become the de-facto way to make your systems available to others over
-the public Internet
+the public Internet. You'll hear a lot of people, including Fielding himself,
+saying that today's REST APIs are not *really* RESTful, but that has more to do
+with how the client knows where stuff lives and to many is not a particularly
+important feature of RESTful systems.
 
 
 
@@ -72,6 +87,19 @@ filled in web form).
 
 
 
+
+## REST APIs Are Now Table Stakes For SaaS
+
+If you're a SaaS provider, you are expected to have a REST API for people to
+write programs to interact with your service.
+
+Note: Doesn't matter if this was ever your intention or not. You're expected to
+have one and thus mus spend time and money developing it, lest you look silly by
+not having one.
+
+
+
+
 ## Some HTTP Methods
 
 * GET
@@ -82,6 +110,50 @@ filled in web form).
 
 Note: GET: get a resource (page, image, video, etc); POST: create a new
 resource; PUT/PATCH: create/update resources DELETE: delete resource
+
+
+
+
+## REST At Its Core
+
+Four core concepts are fundamental to all REST services
+
+(courtesey Wikipedia)
+
+
+
+## Identificaiton of Resources
+
+When using HTTP, this is done using a URI. Importantly, a resource and *its representation* are completely orthogonal. The server doesn't return database results but rather the JSON or XML or HTML representation of the resource.
+
+
+
+## Manipulation of Resources Through These Representations
+
+When the server transmits the representation of the resource to the client, it
+includes enough information for the client to know how to modify or delete the
+resource.
+
+
+
+## Self-Descriptive Messages
+
+Each representation returned by the server includes information on how to
+process the message (e.g. using MIME types
+
+
+
+## Hypermedia as the Engine of Application State (HATEOAS)
+
+Clients are *smart*. They know nothing about how the service is laid out to
+begin with. They discover what actions they can take from the root link.
+Following a link gives further links, defining exactly what may be done from
+that resource. Clients aren't assumed to know *anything else* except what the
+message contains and what the server already told them.
+
+Note: This last point is where most "REST API" systems fall down, as it puts an
+undue burden on clients and expects capabilities that simply don't exist yet, if
+they ever will.
 
 
 
@@ -98,10 +170,11 @@ them, and returning HTTP responses.
 
 ## Hey! That Describes Every Web Application!
 
-Yep. A REST API Service is just a web application and, as such, is built using
-the same set of tools.
+Yep. A RESTful API Service is just a web application and, as such, is built using
+the same set of tools. We'll build ours using Python, Flask, and SQLAlchemy
 
-Note: All major web frameworks can be used to create a REST API service, with
+Note: I was going to do it in psuedo-code but the Python version was shorter :)
+All major web frameworks can be used to create a REST API service, with
 various degrees of difficulty. Django has the django-rest-framework, for
 example. We're going to talk about Flask as it's as closes to pure Python as we
 can get.
@@ -119,6 +192,53 @@ Note: Resources are the nouns of a system. If we were twitter, "tweet" would be 
 resource, as would "user". If that sounds similar to *models* in an ORM that
 because they're basically the same thing. REST resources are usually represented
 on the backed by a database table.
+
+
+
+
+
+## Resources == Models? 
+
+Pretty much. If you're system is built using ORM models, your resources are
+almost certainly going to be your models.
+
+Note: This is a good thing. Keeping in principle with DRY (Don't Repeat
+Yourself). You already wrote a database model; the goal is to reuse that
+definition to describe your resources, so you don't have to repeat yourself.
+
+
+
+
+## Short Aside: What Is a Web Framework?
+
+Web frameworks reduce the boilerplate required to create a web application by
+providing:
+
+* *Routing* of HTTP requests to handler functions or classes
+    * Example: `/foo` => `def process_foo()`
+* *Templating* of HTTP responses to inject dynamic data in pre-defined structure
+    * Example: `<h1>Hello {{ user_name }}</h1>`
+
+Note: ORMs are usually included, but a new generation of microframeworks are
+leaving this part out, given the rise and popularity of NoSQL storage solutions
+and ORMs reliance on traditional SQL.
+
+
+
+
+## Short Aside: The Web Framework Impedance Mismatch
+
+The more time you spend building REST APIs with web frameworks, the more you'll
+notice the subtle (and at time, glaring) impedance mismatch. 
+
+Examples:
+
+* Web frameworks care deeply about URLs as *routes* to processing functions;
+  REST APIs treat URLs as the address of a resource or collection
+* Web frameworks provide HTML templating, while REST APIs rarely return *just*
+  HTML. JSON-related functionality feels bolted-on.
+
+**We need web frameworks better suited for building REST APIs!**
 
 
 
@@ -142,9 +262,9 @@ resources:
 ## Unique IDs and URL structures
 
 All resources must be identified by a unique address at which
-they can be reached, their URI. This usually requires each resource
+they can be reached, their URI. This requires each resource
 contain a unique ID, usually a monotonically increasing integer or
-UUID.
+UUID (like a primary key in a database table).
 
 Our pattern for building URLs will be `/resource_name[/resource_id[/resource_attribute]]`.
 
@@ -179,7 +299,9 @@ class Tweet(db.Model, SerializableModel):
 ```
 
 Note: We're using SQLAlchemy as our ORM. It's by far the most popular Python ORM
-and plays well with Flask
+and plays well with Flask. Again, we see the impedance mismatch, where the ORM
+is concerned with the exact database representation (including foreign keys and
+table names) while we care more about the general description.
 
 
 
@@ -205,7 +327,7 @@ class SerializableModel(object):
 
 Note: Here we're adding a mixin class that will allow our resources to return a
 dictionary representation of themselves, which can easily be transformed to
-JSON. This uses database reflection, a technique that will become a lot more
+JSON. This is our first hint of database reflection, a technique that will become a lot more
 important later on.
 
 
@@ -214,7 +336,7 @@ important later on.
 
 ## Show Me a GET
 
-Here's the code that handles retreiving a single tweet and returning it as JSON:
+Here's the code that handles retrieving a single tweet and returning it as JSON:
 
 ```python
 from models import Tweet, User
@@ -240,7 +362,7 @@ from).
 
 ## OK, But Does it Blend?
 
-Let's `curl` our new API (preloaded with a single tweet):
+Let's `curl` our new API (preloaded with a single tweet and user):
 
 ```bash
 $ curl localhost:5000/tweets/1
@@ -298,7 +420,7 @@ the *collection* of tweets is a list of all tweets in the system.
 The `tweet` collection is accessed by the following URL (according to our rules,
 described earlier): `/tweets/`. 
 
-Note: Looks like a folder on a filesystem. Not a coincidence.
+Note: Looks like a folder on a file system. Not a coincidence.
 
 
 
@@ -375,7 +497,7 @@ for XYZ corp who just needs to get it out the door quickly.
 
 
 
-## How Doew It Work?
+## How Does It Work?
 
 Generalizes REST resource handling into notion of a *Service* (e.g. the "Tweet
 Service" handles all tweet-related actions).
@@ -499,11 +621,11 @@ class associated with it. We add endpoints based on the class's name.
 
 
 
+
 ## Dynamic Class Generation Using `type`
 
 In Python, `type` with one argument returns a variable's type. With three
-arguments, *it creates a new type with the given name, base classes, and
-attributes*.
+arguments, *it creates a new type with the given name, base classes, and attributes*.
 
 
 
@@ -512,7 +634,10 @@ attributes*.
 ## Using `type` to Create Services
 
 ```python
-serializable_model = type(cls.__name__ + 'Serializable', (cls, SerializableModel), {})
+serializable_model = type(
+    cls.__name__ + 'Serializable',
+    (cls, SerializableModel),
+    {})
 
 new_endpoint = type(cls.__name__ + 'Endpoint', (Service,),
     {'__model__': serializable_model,
@@ -530,19 +655,12 @@ is totally registered with Flask and ready to be used.
 ## Let's Use This Puppy!
 
 ```python
-from flask.ext.sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-
 class Cloud(db.Model):
     __tablename__ = 'cloud'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-
-    def __str__(self):
-        return self.name
 
 class Machine(db.Model):
     __tablename__ = 'machine'
@@ -554,10 +672,11 @@ class Machine(db.Model):
     cloud_id = db.Column(db.Integer, db.ForeignKey('cloud.id'))
     cloud = db.relationship('Cloud')
     is_running = db.Column(db.Boolean, default=False)
-
-    def __str__(self):
-        return self.hostname
 ```
+
+
+
+
 
 ## The Application Code
 
@@ -574,6 +693,10 @@ with app.app_context():
 sandboy = Sandboy(app, db, [Machine, Cloud])
 app.run(debug=True)
 ```
+
+
+
+
 
 ## The Application Code (continued)
 
@@ -619,8 +742,7 @@ API service.
 
 ## Enter `sandman`
 
-`sandman` creates a RESTful API service for *legacy databases* with **no code
-required**.
+`sandman` creates a RESTful API service for *legacy databases* with **no code required**.
 
 
 
@@ -643,22 +765,12 @@ $ sandmanctl mysql+mysqlconnector://localhost/Chinook
 ## And Here's How You Use It:
 
 ```bash
-$ curl -v localhost:8080/artists?Name=AC/DC"
-GET /artists/1 HTTP/1.1
-Accept: */*
-Accept-Encoding: gzip, deflate, compress
-Host: localhost:8080
-User-Agent: HTTPie/0.8.0
-
-
-
+$ curl -v localhost:8080/artists?Name=AC/DC
 HTTP/1.0 200 OK
-Content-Length: 143
 Content-Type: application/json
 Date: Sun, 06 Jul 2014 15:55:21 GMT
 ETag: "cea5dfbb05362bd56c14d0701cedb5a7"
 Link: </artists/1>; rel="self"
-Server: Werkzeug/0.9.6 Python/2.7.6
 
 {
     "ArtistId": 1,
@@ -689,20 +801,12 @@ Server: Werkzeug/0.9.6 Python/2.7.6
 ## How Do We Explore?
 
 We can `curl` `/` and get a list of all available services and their URLs. We
-can hit `<resource>/meta` to get meta-info about the service.
+can hit `/<resource>/meta` to get meta-info about the service.
 
 Example (the "artist" service):
 
 ```bash
 $ curl -v localhost:8080/artists/meta
-GET /artists/meta HTTP/1.1
-Accept: */*
-Accept-Encoding: gzip, deflate, compress
-Host: localhost:8080
-User-Agent: HTTPie/0.8.0
-
-
-
 HTTP/1.0 200 OK
 Content-Length: 80
 Content-Type: application/json
@@ -721,6 +825,7 @@ Server: Werkzeug/0.9.6 Python/2.7.6
 
 
 
+
 ## Exploring the API
 
 "Real" REST APIs enable clients to use the API using only the information
@@ -730,10 +835,12 @@ without requiring any code from the user.
 
 
 
+
 ## But Wait, There's More
 
 Would be nice to be able to visualize your data in addition to interacting with it via
 REST API.
+
 
 
 
@@ -749,6 +856,7 @@ admin page. All without requiring any code.
 
 
 
+
 ## How Is All Of This Possible?
 
 1. Code generation
@@ -758,6 +866,7 @@ admin page. All without requiring any code.
 Note: Sandman can do things like create primary keys on the fly for tables that
 don't have them. While it doesn't require any code, you can extend it very
 simply to add method specific validation, behavior, and authentication.
+
 
 
 
