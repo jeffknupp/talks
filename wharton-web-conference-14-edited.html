@@ -1,0 +1,976 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Writing Idiomatic Python: Towards Maintainable and Comprehensible Code</title>
+
+		<meta name="description" content="A presentation on the importance of idiomatic Python">
+		<meta name="author" content="Jeff Knupp">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+        <script>
+if( window.location.search.match( /print-pdf/gi ) ) {
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'css/print/pdf.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+}
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+        </head>
+        <body>
+        <div class="reveal">
+            <div class="slides">
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="03672a805632c52741c53e3a6e05bf3f">
+                    <h1>Automated Building of RESTful API Services in Python</h1>
+                    <ul>
+                        <li>Jeff Knupp</li>
+                        <li>@jeffknupp</li>
+                        <li>jeff@jeffknupp.com</li>
+                        <li>Wharton Web Conference 2014</li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="e852a38cbb78895687b28697c1f1ec2b">
+                    <h2>Jeff Knupp?</h2>
+                    <ul>
+                        <li class="fragment" data-fragment-index="0">Author of “Writing Idiomatic Python”  </li>
+                        <li class="fragment" data-fragment-index="1">Full-time Python developer @ AppNexus  </li>
+                        <li class="fragment" data-fragment-index="2">Blogger at <a href="http://www.jeffknupp.com">jeffknupp.com </a>
+                        </li>
+                        <li class="fragment" data-fragment-index="3">Creator of the “sandman” Python library </li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="af5c7a4965b0f46219c045b35f2fa592">
+                    <h2>Let's Talk About REST APIs</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>Seven letters. Two acronyms. Buy what does it mean?</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="665a07f27dbfb100102b7e4fd91885bf">
+                    <h2>API: Application Programming Interface</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>Programmatic way of interacting with a third-party system.</p>
+                    <aside class="notes" data-markdown="">Example: "I used Twitter's API to build a tool to see if anyone is bad-mouthing
+                        me online."
+
+                        Translation: I wrote a program that interacts with a program on Twitter's side
+                        built to <em>interface</em> with Twitter's information systems.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="3569c419362b4260303d2e529be12576">
+                    <h2>REST: Representational State Transfer</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>Way to interact with APIs over HTTP (the communication protocol the Internet is built on).</p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <ul>
+                        <li>"REST" was coined by Roy Fielding in his 2000 doctoral dissertation.
+                        Includes set of design principles and best practices for designing systems meant to
+                        be "RESTful".</li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="4e5e0d9da762d3648563468a032fa29a">
+                    <h2>REST: Representational State Transfer (continued)</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>In RESTful systems, application state is manipulated by the client interacting
+                    with hyperlinks. A root link (e.g. <a href="http://example.com/api/">http://example.com/api/</a>) describes what actions can be taken by listing
+                    resources and state as hyperlinks. </p>
+                    <aside class="notes" data-markdown="">Each time the client follows a link, the server informs it
+                        where it can go (what actions it can take) from its current location via
+                        links. Clients use traditional HTTP methods to take actions on the references.
+                        The server is stateless, meaning no client context data is stored between
+                        requests.
+                        HTTP has become the de-facto way to make your systems available to others over
+                        the public Internet. You'll hear a lot of people, including Fielding himself,
+                        saying that today's REST APIs are not <em>really</em> RESTful, but that has more to do
+                        with how the client knows where stuff lives and to many is not a particularly
+                        important feature of RESTful systems.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="40045bc0e1cb7a1a5fb1e49f6a00d7f6">
+                    <h2>REST and HTTP</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>HTTP is just a messaging protocol. Happens to be the one the Internet is based
+                    on. </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>RESTful systems use this protocol to their advantage e.g. caching resources</p>
+                    <aside class="notes" data-markdown="">built on the <em>request/response</em> pattern.
+                        Each request has an associated <em>method</em> that indicates the type of request the
+                        client is making. 
+                        It may also include data sent by the client (e.g. from a
+                        filled in web form).</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="359a87fa7a38b6fd842ce6f2537b190d">
+                    <h2>REST APIs Are Now Table Stakes For SaaS</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>If you're an SaaS provider, you are expected to have a REST API for people to
+                    write programs to interact with your service.</p>
+                    <aside class="notes" data-markdown="">Doesn't matter if this was ever your intention or not. You're expected to
+                        have one and thus mus spend time and money developing it, lest you look silly by
+                        not having one.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="44ae2a34398474381c549ce3e72fa20f">
+                    <h2>Some HTTP Methods</h2>
+                    <div style="text-align: left;">
+                        <span>
+                            <br>
+                        </span>
+                    </div>
+                    <div style="text-align: left;">
+                        <span>
+                            <br>
+                        </span>
+                    </div>
+                    <div style="text-align: left;">
+                        <span>
+                            <br>
+                        </span>
+                    </div>
+                    <ul>
+                        <li>
+                        <span>GET</span>
+                        <br>
+                        </li>
+                        <li>POST</li>
+                        <li>PUT</li>
+                        <li>PATCH</li>
+                        <li>DELETE</li>
+                    </ul>
+                    <aside class="notes" data-markdown="">GET: get a resource (page, image, video, etc); POST: create a new
+                        resource; PUT/PATCH: create/update resources DELETE: delete resource</aside>
+                </section>
+                <section section="" class="stack" data-id="e9493293dfed293f1ccccf970b2abe82">
+                    <section data-markdown="" data-markdown-parsed="true" class="" data-id="15d1ceded57a6055e7e8d471557f1fef">
+                        <h2>REST At Its Core</h2>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>Four core concepts are fundamental to all REST services</p>
+                        <p>(courtesy Wikipedia)</p>
+                    </section>
+                    <section data-markdown="" data-markdown-parsed="true" class="" data-id="a4521d5b9c4fb056aa4b0fd70ffc1534">
+                        <h2>IDENTIFICATION of Resources</h2>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>When using HTTP, this is done using a URI. Importantly, a resource and <em>its representation</em> are completely orthogonal. The server doesn't return database results but rather the JSON or XML or HTML representation of the resource.</p>
+                    </section>
+                    <section data-markdown="" data-markdown-parsed="true" class="" data-id="956dfaa1d9eb04190505eace5946c479">
+                        <h2>Manipulation of Resources Through These Representations</h2>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>When the server transmits the representation of the resource to the client, it
+                        includes enough information for the client to know how to modify or delete the
+                        resource.</p>
+                    </section>
+                    <section data-markdown="" data-markdown-parsed="true" class="" data-id="8a6f01a891951e730ba3c1efff2b2795">
+                        <h2>Self-Descriptive Messages</h2>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>Each representation returned by the server includes information on how to
+                        process the message (e.g. using MIME types</p>
+                    </section>
+                    <section data-markdown="" data-markdown-parsed="true" class="" data-id="1c8bad397c7778b5dc08b2c6c1470f70">
+                        <h2>Hypermedia as the Engine of Application State (HATEOAS)</h2>
+                        <p>
+                        <br>
+                        </p>
+                        <p>
+                        <br>
+                        </p>
+                        <p>Clients are <em>smart</em>. They know nothing about how the service is laid out to
+                        begin with. They discover what actions they can take from the root link.
+                        Following a link gives further links, defining exactly what may be done from
+                        that resource. Clients aren't assumed to know <em>anything else</em> except what the
+                        message contains and what the server already told them.</p>
+                        <aside class="notes" data-markdown="">This last point is where most "REST API" systems fall down, as it puts an
+                            undue burden on clients and expects capabilities that simply don't exist yet, if
+                            they ever will.</aside>
+                    </section>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="7733cfb058c1f406980a3ffdcc384627">
+                    <h2>Let's Build a RESTful API Service!</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <span>A REST API allows </span>
+                    <em>clients</em>
+                    <span> to send </span>
+                    <em>HTTP requests</em>
+                    <span> to manipulate </span>
+                    <em>resources</em>
+                    <span>.</span>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>...So we need to write a server capable of accepting HTTP requests, acting on
+                    them, and returning HTTP responses.</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="12698f8e4f9ecd7125e73fa510c3f8f2">
+                    <h2>Hey!&nbsp;<span style="font-size: 75.96px;">That Describes&nbsp;</span>
+                    </h2>
+                    <h2>
+                        <span style="font-size: 75.96px;">Every Web Application!</span>
+                    </h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>Yep. A RESTful API Service is just a web application and, as such, is built using
+                    the same set of tools. We'll build ours using Python, Flask, and SQLAlchemy</p>
+                    <aside class="notes" data-markdown="">I was going to do it in psuedo-code but the Python version was shorter :)
+                        All major web frameworks can be used to create a REST API service, with
+                        various degrees of difficulty. Django has the django-rest-framework, for
+                        example. We're going to talk about Flask as it's as closes to pure Python as we
+                        can get.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="b890bfed2f6d2fb4c1fe627389ec1904">
+                    <h2>What is a Resource?</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>Earlier we said a REST API allows clients to manipulate <em>resources</em> via HTTP.
+                    What is a resource?</p>
+                    <aside class="notes" data-markdown="">Resources are the nouns of a system. If we were twitter, "tweet" would be a
+                        resource, as would "user". If that sounds similar to <em>models</em> in an ORM that
+                        because they're basically the same thing. REST resources are usually represented
+                        on the backed by a database table.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="d95b731949c6b0b47c1f9756d14ebda0">
+                    <h2>Resources == Models?</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>Pretty much. If you're system is built using ORM models, your resources are
+                    almost certainly going to be your models.</p>
+                    <aside class="notes" data-markdown="">This is a good thing. Keeping in principle with DRY (Don't Repeat
+                        Yourself). You already wrote a database model; the goal is to reuse that
+                        definition to describe your resources, so you don't have to repeat yourself.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="b08346ddc35100abce081130d45d5592">
+                    <h2>Short Aside: What Is a Web Framework?</h2>
+                    <p>
+                    <br>
+                    </p>
+                    <p>Web frameworks reduce the boilerplate required to create a web application by
+                    providing:</p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <ul>
+                        <li>
+                        <em>Routing</em> of HTTP requests to handler functions or classes<ul>
+                            <li>Example: <code>/foo</code> =&gt; <code>def process_foo()</code>
+                            </li>
+                        </ul>
+                        </li>
+                        <li>
+                        <em>Templating</em> of HTTP responses to inject dynamic data in pre-defined structure<ul>
+                            <li>Example: <code>&lt;h1&gt;Hello {{ user_name }}&lt;/h1&gt;</code>
+                            </li>
+                        </ul>
+                        </li>
+                    </ul>
+                    <aside class="notes" data-markdown="">ORMs are usually included, but a new generation of microframeworks are
+                        leaving this part out, given the rise and popularity of NoSQL storage solutions
+                        and ORMs reliance on traditional SQL.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="db199a01c6342cdb09d8323a930936dc">
+                    <h2>Short Aside: The Web Framework Impedance Mismatch</h2>
+                    <p>The more time you spend building REST APIs with web frameworks, the more you'll
+                    notice the subtle (and at time, glaring) impedance mismatch.</p>
+                    <ul>
+                        <li class="fragment" data-fragment-index="0">Web frameworks care deeply about URLs as <em>routes</em> to processing functions;
+                        REST APIs treat URLs as the address of a resource or collection</li>
+                        <li class="fragment" data-fragment-index="1">Web frameworks provide HTML templating, while REST APIs rarely return <em>just</em>
+                        HTML. JSON-related functionality feels bolted-on.</li>
+                    </ul>
+                    <p class="fragment" data-fragment-index="2">
+                    <strong>We need web frameworks for building REST APIs!</strong>
+                    </p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="619f458d67cf1c64dedeeb4361384cba">
+                    <h2>Let's Play Pretend</h2>
+                    <p>Imagine we're Twitter weeks after launch. Ashton Kutcher seems to be able to use
+                    our service, but what about <em>other systems</em>?</p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p class="fragment" data-fragment-index="0">That's right, we'll need to create an API. Being an internet company, we'll
+                    build a REST API service. For now, we'll focus on two
+                    resources:</p>
+                    <ul>
+                        <li class="fragment" data-fragment-index="1">user</li>
+                        <li class="fragment" data-fragment-index="2">tweet</li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="1fc4fb0679cd615e1a12d0f7a47bfe74">
+                    <h2>Unique IDs and URL structures</h2>
+                    <p>All resources must be identified by a unique address at which
+                    they can be reached, their URI. This requires each resource
+                    contain a unique ID, usually a monotonically increasing integer or
+                    UUID (like a primary key in a database table).</p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <p style="text-align: center;">
+                    <font style="font-size: 24px;">Our pattern for building URLs will be <code>/resource_name[/resource_id[/resource_attribute]]</code>.</font>
+                    </p>
+                    <aside class="notes" data-markdown="">The last two are optional. It will start with something like <code>/tweet</code>,
+                        then might have <code>2348</code> as the tweet ID.</aside>
+                    <br>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="4ab54d5e2a18dbddb31c6d1c259291b9">
+                    <h2>Let's See Some Code!</h2>
+                    <p>Here we define our resources is a file called <code>models.py</code>:</p>
+                    <pre><code class="python"><span class="class"><span class="keyword">class</span> <span class="title">User</span><span class="params">(db.Model, SerializableModel)</span>:</span>
+    __tablename__ = <span class="string">'user'</span>
+
+    id = db.Column(db.Integer, primary_key=<span class="built_in">True</span>)
+    username = db.Column(db.String)
+
+
+<span class="class"><span class="keyword">class</span> <span class="title">Tweet</span><span class="params">(db.Model, SerializableModel)</span>:</span>
+    __tablename__ = <span class="string">'tweet'</span>
+
+    id = db.Column(db.Integer, primary_key=<span class="built_in">True</span>)
+    content = db.Column(db.String)
+    posted_at = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey(<span class="string">'user.id'</span>))
+    user = db.relationship(User)</code>    </pre>
+                    <aside class="notes" data-markdown="">We're using SQLAlchemy as our ORM. It's by far the most popular Python ORM
+                        and plays well with Flask. Again, we see the impedance mismatch, where the ORM
+                        is concerned with the exact database representation (including foreign keys and
+                        table names) while we care more about the general description.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="1ca03a9bcdf79c495dba2e3da75fafea">
+                    <h2>Smarter Resources Through Magic</h2>
+                    <pre><code class="python"><span class="class"><span class="keyword">class</span> <span class="title">SerializableModel</span><span class="params">(object)</span>:</span>
+    <span class="string">"""A SQLAlchemy model mixin class that can serialize itself as JSON."""</span>
+
+    <span class="function"><span class="keyword">def</span> <span class="title">to_dict</span><span class="params">(self)</span>:</span>
+        <span class="string">"""Return dict representation of class by iterating over database
+        columns."""</span>
+        value = {}
+        <span class="keyword">for</span> column <span class="keyword">in</span> self.__table__.columns:
+            attribute = getattr(self, column.name)
+            <span class="keyword">if</span> isinstance(attribute, datetime.datetime):
+                attribute = str(attribute)
+            value[column.name] = attribute
+        <span class="keyword">return</span> value</code>    </pre>
+                    <aside class="notes" data-markdown="">Here we're adding a mixin class that will allow our resources to return a
+                        dictionary representation of themselves, which can easily be transformed to
+                        JSON. This is our first hint of database reflection, a technique that will become a lot more
+                        important later on.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="5d26e94dc18dc2043740e63d1e57f881">
+                    <h2>Show Me a GET</h2>
+                    <p>Here's the code that handles retrieving a single tweet and returning it as JSON:</p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <pre><code class="python"><span class="keyword">from</span> models <span class="keyword">import</span> Tweet, User
+
+<span class="decorator">@app.route('/tweets/&lt;int:tweet_id&gt;', methods=['GET'])</span>
+<span class="function"><span class="keyword">def</span> <span class="title">get_tweet</span><span class="params">(tweet_id)</span>:</span>
+    tweet = Tweet.query.get(tweet_id)
+    <span class="keyword">if</span> tweet <span class="keyword">is</span> <span class="built_in">None</span>:
+        response = jsonify({<span class="string">'result'</span>: <span class="string">'error'</span>})
+        response.status_code = <span class="number">404</span>
+        <span class="keyword">return</span> response
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> jsonify({<span class="string">'tweet'</span>: tweet.to_dict()})</code></pre>
+                    <aside class="notes" data-markdown="">
+                        <code>jsonify</code> is provided by Flask and turns a dictionary into a JSON
+                        response object. Up to us to use proper HTTP status codes (404 means the
+                        resource was not found, which is where the notion of 404 HTML pages originates
+                        from).</aside>
+                    <br>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="e57dd14edc46a1c7d7c0aab0287a70a2">
+                    <h2>OK, But Does it Blend?</h2>
+                    <p>Let's <code>curl</code> our new API (preloaded with a single tweet and user):</p>
+                    <p>
+                    <br>
+                    </p>
+                    <p>
+                    <br>
+                    </p>
+                    <pre><code class="bash">$ curl localhost:<span class="number">5000</span>/tweets/<span class="number">1</span>
+{
+  <span class="string">"tweet"</span>: {
+    <span class="string">"content"</span>: <span class="string">"This is awesome"</span>,
+    <span class="string">"id"</span>: <span class="number">1</span>,
+    <span class="string">"posted_at"</span>: <span class="string">"2014-07-05 12:00:00"</span>,
+    <span class="string">"user_id"</span>: <span class="number">1</span>
+  }
+}
+                    </code></pre>
+                    <br>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="4ac1d7b8ae5724451d6a4d5b438218a7">
+                    <h2>How Do We Add a Tweet?</h2>
+                    <pre style="max-height: none; max-width: none;">
+    <code class="python">
+    <span class="keyword">from</span> models <span class="keyword">import</span> Tweet, User
+
+<span class="decorator">@app.route('/tweets/', methods=['POST'])</span>
+<span class="function">
+    <span class="keyword">def</span> <span class="title">create_tweet</span>
+    <span class="params">()</span>:</span>
+    <span class="string">"""Create a new tweet object based on the JSON data sent
+    in the request."""</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> all((<span class="string">'content'</span>, <span class="string">'posted_at'</span>, <span class="string">'user_id'</span> <span class="keyword">in</span> request.json)):
+        response = jsonify({<span class="string">'result'</span>: <span class="string">'ERROR'</span>})
+        response.status_code = <span class="number">400</span>  <span class="comment"># HTTP 400: BAD REQUEST</span>
+        <span class="keyword">return</span> response
+    <span class="keyword">else</span>:
+        tweet = Tweet(
+            content=request.json[<span class="string">'content'</span>],
+            posted_at=datetime.datetime.strptime(
+                request.json[<span class="string">'posted_at'</span>], <span class="string">'%Y-%m-%d %H:%M:%S'</span>),
+            user_id=request.json[<span class="string">'user_id'</span>])
+        db.session.add(tweet)
+        db.session.commit()
+        <span class="keyword">return</span> jsonify(tweet.to_dict())</code>
+                    </pre>
+                    <aside class="notes" data-markdown="">Here, we're creating a new Tweet. We create the ORM object then save it to
+                        the database. If a field is missing from the JSON message, the request is
+                        malformed (that's what the <code>if not all</code> part does).</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="bf05d80819a890caa8b9ac08b18d128e">
+                    <h2>What About Seeing All Tweets?</h2>
+                    <p>In REST APIs, a group of resources is called a <em>collection</em>. REST APIs are
+                    heavily built on the notion of resources and collections. In our case, 
+                    the <em>collection</em> of tweets is a list of all tweets in the system. </p>
+                    <p>The <code>tweet</code> collection is accessed by the following URL (according to our rules,
+                    described earlier): <code>/tweets/</code>. </p>
+                    <aside class="notes" data-markdown="">Looks like a folder on a file system. Not a coincidence.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="ccf024ff8588be4271b91a95ad5cdd06">
+                    <h2>How Do We Write That Code?</h2>
+                    <pre><code class="python">    <span class="keyword">from</span> twitter.models <span class="keyword">import</span> Tweet, User
+
+    <span class="decorator">@app.route('/tweets/', methods=['GET'])</span>
+    <span class="function"><span class="keyword">def</span> <span class="title">get_tweet_collection</span><span class="params">()</span>:</span>
+        <span class="string">"""Return all tweets as JSON."""</span>
+        all_tweets = []
+        <span class="keyword">for</span> tweet <span class="keyword">in</span> Tweet.query.all():
+            all_tweets.append({<span class="string">'content'</span>: tweet.content, <span class="string">'posted_at'</span>:
+            tweet.posted_at, <span class="string">'posted_by'</span>: tweet.user.username})</code></pre>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="3271a3ef2a7c899ce71ef57e71a6f374">
+                    <h2>This Code Is Boring</h2>
+                    <p>All the code thus far has been pretty much boilerplate. Every REST API you write
+                    in Flask (modulo business logic) will look identical. How can we use that to our
+                    advantage?</p>
+                    <aside class="notes" data-markdown="">While different applications may need to add a bit of business logic to
+                        the GET and POST code, it's usually pretty minimal and ends up looking almost
+                        identical to what we have here.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="97a84ce93486f1098cf22fa87efc244d">
+                    <h2>It's 2014...</h2>
+                    <p>We have self-driving cars and delivery drones, why can't we build REST APIs
+                    automatically?</p>
+                    <aside class="notes" data-markdown="">I don't like boring code. I'm of the opinion that boring code should write itself.
+                        Once you've defined your resources, it should be possible to just hit a
+                        button and BLAM!, RESTful API service created.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="5071c672f5b193f68fe896a65af93d75">
+                    <h2>Whenever Possible, Code Should Write Itself</h2>
+                    <p>This allows one to work at a higher level of abstraction. Solve the problem once
+                    in a general way and let code generation solve each individual instance of the
+                    problem.</p>
+                    <ul>
+                        <li>Part of <em>The Unix Philosophy</em>
+                        </li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="867261c31778f16d86aca7529ec0cece">
+                    <h2>Enter <code>Flask-Sandboy</code>
+                    </h2>
+                    <p>Third party Flask extension written by the dashing Jeff Knupp.
+                    Define your models. Hit a button. BAM! RESTful API service that <em>just works</em>.</p>
+                    <p>(The name will make more sense in a few minutes)</p>
+                    <aside class="notes" data-markdown="">This isn't meant to create the REST API for Twitter or GitHub, both of
+                        which are complex and expertly designed. This is meant to create the REST API
+                        for XYZ corp who just needs to get it out the door quickly.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="1d0521634972f7950adeb69b8fba8c13">
+                    <h2>How Does It Work?</h2>
+                    <p>Generalizes REST resource handling into notion of a <em>Service</em> (e.g. the "Tweet
+                    Service" handles all tweet-related actions).</p>
+                    <pre><code class="python"><span class="class"><span class="keyword">class</span> <span class="title">Service</span><span class="params">(MethodView)</span>:</span>
+    <span class="string">"""Base class for all resources."""</span>
+
+    __model__ = <span class="built_in">None</span>
+    __db__ = <span class="built_in">None</span>
+
+    <span class="function"><span class="keyword">def</span> <span class="title">get</span><span class="params">(self, resource_id=None)</span>:</span>
+        <span class="string">"""Return response to HTTP GET request."""</span>
+        <span class="keyword">if</span> resource_id <span class="keyword">is</span> <span class="built_in">None</span>:
+            <span class="keyword">return</span> self._all_resources()
+        <span class="keyword">else</span>:
+            resource = self._resource(resource_id)
+            <span class="keyword">if</span> <span class="keyword">not</span> resource:
+                <span class="keyword">raise</span> NotFoundException
+            <span class="keyword">return</span> jsonify(resource.to_dict())</code>        </pre>
+                    <aside class="notes" data-markdown="">take note of the <strong>model</strong> and <strong>db</strong> class attributes. The latter is just
+                        a handle to the database. <strong>model</strong> is the interesting part and will be defined
+                        later.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="3ad62fb981dc2f058a979c1e7accb896">
+                    <h2>How Does It Work (continued)</h2>
+                    <pre><code class="python"><span class="function"><span class="keyword">def</span> <span class="title">_all_resources</span><span class="params">(self)</span>:</span>
+    <span class="string">"""Return all resources of this type as a JSON list."""</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> <span class="string">'page'</span> <span class="keyword">in</span> request.args:
+        resources = self.__db__.session.query(self.__model__).all()
+    <span class="keyword">else</span>:
+        resources = self.__model__.query.paginate(
+            int(request.args[<span class="string">'page'</span>])).items
+    <span class="keyword">return</span> jsonify(
+        {<span class="string">'resources'</span>: [resource.to_dict() <span class="keyword">for</span> resource <span class="keyword">in</span> resources]})</code>    </pre>
+                    <aside class="notes" data-markdown="">
+                        <code>page</code> is used for pagination, or limiting the number of results returned
+                        and providing a <code>next</code> and <code>previous</code> link to get the next or previous set of
+                        results.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="b97d97fe5d1e7a6af3bdf255a584d868">
+                    <h2>How Does It Work (continued)</h2>
+                    <p>Here's how POST works. Notice the <code>verify_fields</code> decorator and use
+                    of <code>**request.json</code> magic...</p>
+                    <pre><code class="python">    <span class="decorator">@verify_fields</span>
+    <span class="function"><span class="keyword">def</span> <span class="title">post</span><span class="params">(self)</span>:</span>
+        <span class="string">"""Return response to HTTP POST request."""</span>
+        resource = self.__model__.query.filter_by(**request.json).first()
+        <span class="keyword">if</span> resource:
+            <span class="keyword">return</span> self._no_content_response()
+        instance = self.__model__(**request.json)
+        self.__db__.session.add(instance)
+        self.__db__.session.commit()
+        <span class="keyword">return</span> self._created_response(instance.to_dict())</code>    </pre>
+                    <aside class="notes" data-markdown="">verify_fields is a decorator I wrote that introspects the model (much like
+                        to_dict which we saw earlier) and makes sure that all required fields are
+                        present. Uses database introspection to determine which fields are required.
+
+                        **request.json abuses two facts: SQLAlchemy models can be constructed using
+                        keywords for each field/value and request.json is a dict. End result is we've
+                        called the constructor and explicitly listed out the resource's fields and
+                        values without even knowing them in advance. verify_fields makes sure we have
+                        all the ones we need.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="e158796480fc86ddfa9b471805f9f184">
+                    <h2>So How Are Model Definitions Turned Into Services?</h2>
+                    <p>We have our models defined. How do we take advantage of the generic <code>Service</code>
+                    class and create services from our models?</p>
+                    <pre><code class="python"><span class="function"><span class="keyword">def</span> <span class="title">register</span><span class="params">(self, cls_list)</span>:</span>
+    <span class="string">"""Register a class to be given a REST API."""</span>
+    <span class="keyword">for</span> cls <span class="keyword">in</span> cls_list:
+        serializable_model = type(
+            cls.__name__ + <span class="string">'Serializable'</span>,
+            (cls, SerializableModel),
+            {})
+        new_endpoint = type(
+            cls.__name__ + <span class="string">'Endpoint'</span>,
+            (Service,),
+            {<span class="string">'__model__'</span>: serializable_model,
+                <span class="string">'__db__'</span>: self.db})
+        view_func = new_endpoint.as_view(
+            new_endpoint.__model__.__tablename__)
+        self.blueprint.add_url_rule(
+            <span class="string">'/'</span> + new_endpoint.__model__.__tablename__,
+            view_func=view_func)
+        self.blueprint.add_url_rule(
+            <span class="string">'/{resource}/&lt;resource_id&gt;'</span>.format(
+                resource=new_endpoint.__model__.__tablename__),
+            view_func=view_func, methods=[
+                <span class="string">'GET'</span>,
+                <span class="string">'PUT'</span>,
+                <span class="string">'DELETE'</span>,
+                <span class="string">'PATCH'</span>,
+                <span class="string">'OPTIONS'</span>])</code></pre>
+                    <aside class="notes" data-markdown="">
+                        <strong>model</strong> is set here to the class sent in augmented with the
+                        SerializableModel we saw before. This lets the service keep track of the model
+                        class associated with it. We add endpoints based on the class's name.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="50cd2dd1d5a02931fdc47d8cb98f8e5c">
+                    <h2>Dynamic Class Generation Using <code>type</code>
+                    </h2>
+                    <p>In Python, <code>type</code> with one argument returns a variable's type. With three
+                    arguments, <em>it creates a new type with the given name, base classes, and attributes</em>.</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="5a2f05bb03a5959ecd54778a56eb5dd2">
+                    <h2>Using <code>type</code> to Create Services</h2>
+                    <pre><code class="python">serializable_model = type(
+    cls.__name__ + <span class="string">'Serializable'</span>,
+    (cls, SerializableModel),
+    {})
+
+new_endpoint = type(cls.__name__ + <span class="string">'Endpoint'</span>, (Service,),
+    {<span class="string">'__model__'</span>: serializable_model,
+        <span class="string">'__db__'</span>: self.db})</code>        </pre>
+                    <aside class="notes" data-markdown="">SerializableModel is created from the class sent in as an argument. We
+                        then create the Service class that derives from <code>Service</code> and sets its <strong>model</strong>
+                        and <strong>db</strong> attributes. Once we add the endpoints a few lines down, the service
+                        is totally registered with Flask and ready to be used.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="890bbb7849ee34c8c33ae101d03cc18b">
+                    <h2>Let's Use This Puppy!</h2>
+                    <pre><code class="python"><span class="class"><span class="keyword">class</span> <span class="title">Cloud</span><span class="params">(db.Model)</span>:</span>
+    __tablename__ = <span class="string">'cloud'</span>
+
+    id = db.Column(db.Integer, primary_key=<span class="built_in">True</span>)
+    name = db.Column(db.String, nullable=<span class="built_in">False</span>)
+    description = db.Column(db.String, nullable=<span class="built_in">False</span>)
+
+<span class="class"><span class="keyword">class</span> <span class="title">Machine</span><span class="params">(db.Model)</span>:</span>
+    __tablename__ = <span class="string">'machine'</span>
+
+    id = db.Column(db.Integer, primary_key=<span class="built_in">True</span>)
+    hostname = db.Column(db.String)
+    operating_system = db.Column(db.String)
+    description = db.Column(db.String)
+    cloud_id = db.Column(db.Integer, db.ForeignKey(<span class="string">'cloud.id'</span>))
+    cloud = db.relationship(<span class="string">'Cloud'</span>)
+    is_running = db.Column(db.Boolean, default=<span class="built_in">False</span>)</code>    </pre>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="ecdc82af3d0ecc4edc45cb19b024e62a">
+                    <h2>The Application Code</h2>
+                    <pre><code class="python"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask
+<span class="keyword">from</span> flask.ext.sandboy <span class="keyword">import</span> Sandboy
+<span class="keyword">from</span> models <span class="keyword">import</span> Machine, Cloud, db
+
+app = Flask(__name__)
+app.config[<span class="string">'SQLALCHEMY_DATABASE_URI'</span>] = <span class="string">'sqlite:///db.sqlite3'</span>
+db.init_app(app)
+<span class="keyword">with</span> app.app_context():
+    db.create_all()
+sandboy = Sandboy(app, db, [Machine, Cloud])
+app.run(debug=<span class="built_in">True</span>)</code>    </pre>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="9206ecc340f674bc3c24f18ed3e71e8b">
+                    <h2>The Application Code (continued)</h2>
+                    <p>That's it. Those 7 lines create a RESTful API service from our models.</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="d7430b9c7612afbb72006cdede13cefb">
+                    <h2>That's Pretty Easy</h2>
+                    <p>In cases where we're building a REST API from scratch, this is pretty easy. But
+                    what if:</p>
+                    <ul>
+                        <li>We have an existing database</li>
+                        <li>We want to create a RESTful API for it</li>
+                        <li>It has 200 tables</li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="190a0b85c6102850329065e19bea325e">
+                    <h2>I'm Not Writing 200 Model Classes</h2>
+                    <p>Only downside of <code>Flask-Sandboy</code> is you have to define your model classes
+                    explicitly. If you have a lot of models, this would be tedious. </p>
+                    <p>...I don't do tedious</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="c8774ea0ea22a21d2af7187478f5df4c">
+                    <h2>It's 2014...</h2>
+                    <p>We have private companies building rocket ships and electric cars. Why can't we
+                    have a tool that you point at a database and hit a button, then, BLAM! RESTful
+                    API service.</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="b23333d724e02f3325e6bc2b8abb8ff6">
+                    <h2>Enter <code>sandman</code>
+                    </h2>
+                    <p>
+                    <code>sandman</code> creates a RESTful API service for <em>legacy databases</em> with <strong>no code required</strong>.</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="18082009220a373702a29ee6cc1e4174">
+                    <h2>Prove It</h2>
+                    <p>Here's how you run <code>sandman</code> against a mysql database:</p>
+                    <pre><code class="bash">$ sandmanctl mysql+mysqlconnector://localhost/Chinook
+ * Running on http://<span class="number">0.0</span>.<span class="number">0.0</span>:<span class="number">8080</span>/
+ * Restarting with reloader</code>                        </pre>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="f9f07bc338acf7568ca27d59844c5163">
+                    <h2>And Here's How You Use It:</h2>
+                    <pre><code class="bash">$ curl -v localhost:<span class="number">8080</span>/artists?Name=AC/DC
+HTTP/<span class="number">1.0</span> <span class="number">200</span> OK
+Content-Type: application/json
+Date: Sun, <span class="number">06</span> Jul <span class="number">2014</span> <span class="number">15</span>:<span class="number">55</span>:<span class="number">21</span> GMT
+ETag: <span class="string">"cea5dfbb05362bd56c14d0701cedb5a7"</span>
+Link: &lt;/artists/<span class="number">1</span>&gt;; rel=<span class="string">"self"</span>
+
+{
+    <span class="string">"ArtistId"</span>: <span class="number">1</span>,
+    <span class="string">"Name"</span>: <span class="string">"AC/DC"</span>,
+    <span class="string">"links"</span>: [
+        {
+            <span class="string">"rel"</span>: <span class="string">"self"</span>,
+            <span class="string">"uri"</span>: <span class="string">"/artists/1"</span>
+        }
+    ],
+    <span class="string">"self"</span>: <span class="string">"/artists/1"</span>
+}</code>                        </pre>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="5339d297e36a90beb247037a5d2f28ed">
+                    <h2>Things To Note</h2>
+                    <ul>
+                        <li>ETag set correctly, allowing for caching responses</li>
+                        <li>Link Header set to let clients discover links to other resources</li>
+                        <li>Search enabled by sending in an attribute name and value<ul>
+                            <li>Wildcard searching supported</li>
+                        </ul>
+                        </li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="0793fadb62f73463a791ae2d5ed4c803">
+                    <h2>How Do We Explore?</h2>
+                    <p>We can <code>curl</code> <code>/</code> and get a list of all available services and their URLs. We
+                    can hit <code>/&lt;resource&gt;/meta</code> to get meta-info about the service.</p>
+                    <p>Example (the "artist" service):</p>
+                    <pre><code class="bash">$ curl -v localhost:<span class="number">8080</span>/artists/meta
+HTTP/<span class="number">1.0</span> <span class="number">200</span> OK
+Content-Length: <span class="number">80</span>
+Content-Type: application/json
+Date: Sun, <span class="number">06</span> Jul <span class="number">2014</span> <span class="number">16</span>:<span class="number">04</span>:<span class="number">25</span> GMT
+ETag: <span class="string">"872ea9f2c6635aa3775dc45aa6bc4975"</span>
+Server: Werkzeug/<span class="number">0.9</span>.<span class="number">6</span> Python/<span class="number">2.7</span>.<span class="number">6</span>
+
+{
+    <span class="string">"Artist"</span>: {
+        <span class="string">"ArtistId"</span>: <span class="string">"integer(11)"</span>,
+        <span class="string">"Name"</span>: <span class="string">"varchar(120)"</span>
+    }
+}</code>                            </pre>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="b974651ab8ce7a6b465bf740956e36d4">
+                    <h2>Exploring the API</h2>
+                    <p>"Real" REST APIs enable clients to use the API using only the information
+                    returned from HTTP requests. <code>sandman</code> tries to be as "RESTful" as possible
+                    without requiring any code from the user.</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="c254499b43b5b06975b36fc670aef089">
+                    <h2>But Wait, There's More</h2>
+                    <p>Would be nice to be able to visualize your data in addition to interacting with it via
+                    REST API.</p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="b071aef4b53afa3775157a0126fb177b">
+                    <h2>Enter The Admin Page</h2>
+                    <p>
+                    <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/jeffknupp-1/images/513585/admin_tracks_improved.jpg">
+                    <br>
+                    </p>
+                    <aside class="notes" data-markdown="">When <code>sandmanctl</code> is run, it automatically opens your browser to this
+                        admin page. All without requiring any code.</aside>
+                    <br>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="fb45a6e0eef0958a4624ff77d1a256ab">
+                    <h2>How Is All Of This Possible?</h2>
+                    <ol>
+                        <li>Code generation</li>
+                        <li>Database introspection</li>
+                        <li>Lots of magic</li>
+                    </ol>
+                    <aside class="notes" data-markdown="">Sandman can do things like create primary keys on the fly for tables that
+                        don't have them. While it doesn't require any code, you can extend it very
+                        simply to add method specific validation, behavior, and authentication.</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="cc1600ffdb3b67d3f050b4332975b913">
+                    <h2>Sandman and Flask-Sandboy</h2>
+                    <p>
+                    <code>sandman</code> came first. Has been number one Python project on GitHub twice and
+                    is downloaded 25,000 a month. Flask-Sandboy is <code>sandman</code>'s little brother...</p>
+                    <aside class="notes" data-markdown="">Hopefully now the name makes sense</aside>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="7e3f85ba2916895daef9a0b8be83a9b8">
+                    <h2>So What's The Point of All This?</h2>
+                    <ul>
+                        <li>The fact that the end result is a REST API is not especially interesting</li>
+                        <li>More important are the concepts underpinning <code>sandman</code> and Flask-Sandboy</li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="794e4b0f83469652198017cb6bf1a63d">
+                    <h2>Prefer Code Generation To Hand-written Code</h2>
+                    <ul>
+                        <li>Work at higher level of abstraction</li>
+                        <li>Solve a problem once in a generic manner</li>
+                        <li>Reduces errors, improves performance</li>
+                    </ul>
+                    <p>In general: <strong>automate everything</strong>
+                    </p>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="ee45cfe0fad3fa35266629f1f0c86cc9">
+                    <h2>Compose Well-Made Tools To Create New Ones</h2>
+                    <ul>
+                        <li>
+                        <code>sandman</code> = Flask + SQLAlchemy + Lots of Glue</li>
+                        <li>Requires you know the capabilities of your tools</li>
+                        <li>Part of the UNIX Philosophy</li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="1f10451ad6cc040c61d618a73e189bd2">
+                    <h2>Be Lazy</h2>
+                    <p>The best programming advice I ever got was to "be lazy"</p>
+                    <ul>
+                        <li>Sandman exists because I was too lazy to write boilerplate ORM code for an
+                        existing database</li>
+                        <li>Flask-Sandboy exists because I was too lazy to write the same API services
+                        over and over</li>
+                        <li>Being lazy forces you to learn your tools and make heavy use of them</li>
+                        <li>
+                        <strong>Don't re-solve solved problems</strong>
+                        </li>
+                    </ul>
+                </section>
+                <section section="" data-markdown="" data-markdown-parsed="true" class="" data-id="43415d64af0e1efafb69614ba50229cc">
+                    <h2>Questions?</h2>
+                    <p>Contact me at:</p>
+                    <ul>
+                        <li>
+                        <code>jeff@jeffknupp.com</code>
+                        </li>
+                        <li>
+                        <code>@jeffknupp</code> on Twitter</li>
+                        <li>
+                        <a href="http://www.jeffknupp.com">http://www.jeffknupp.com</a> on the tubes</li>
+                    </ul>
+                </section>
+            </div>
+
+            <script src="lib/js/head.min.js"></script>
+            <script src="js/reveal.min.js"></script>
+        </div>
+        </html>
+

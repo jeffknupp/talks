@@ -87,19 +87,6 @@ filled in web form).
 
 
 
-
-## REST APIs Are Now Table Stakes For SaaS
-
-If you're a SaaS provider, you are expected to have a REST API for people to
-write programs to interact with your service.
-
-Note: Doesn't matter if this was ever your intention or not. You're expected to
-have one and thus mus spend time and money developing it, lest you look silly by
-not having one.
-
-
-
-
 ## Some HTTP Methods
 
 * GET
@@ -110,6 +97,120 @@ not having one.
 
 Note: GET: get a resource (page, image, video, etc); POST: create a new
 resource; PUT/PATCH: create/update resources DELETE: delete resource
+
+
+
+
+
+## The Web Demystified
+
+To understand how REST APIs work, we have to understand how the web works.
+
+Everything you see on the web is transferred to your computer using HTTP.
+
+
+
+## The Anatomy of a HTTP Request
+
+What happens when we type `http://www.jeffknupp.com` into our browser?
+
+Let's trace the lifecycle of a browser's request.
+
+
+
+## Step 1: DNS Lookup
+
+A protocol called the Domain Name Service (DNS) is used to find the "real" (IP)
+address of `jeffknupp.com`.
+
+
+
+## Step 2: Make HTTP `GET` Request
+
+The browser sends a `GET` request to `192.168.1.1` for the page at address `/`
+(the home or "root" page).
+
+
+
+## Step 3: Revenge of the Web Server
+
+The *web server* (a program used to service HTTP requests to *serve* a web site)
+receives the request, finds the associated `HTML` file, and sends it as an HTTP
+Response.
+
+Note: HTML is a markup language that describes the layout and styling af a web
+page in plain text.
+
+
+## Step 4: Browser Rendering
+
+The browser receives the HTML and creates the graphical representation of the
+web page.
+
+
+
+## Step 5: Downloading of Page Assets
+
+If there are any images, videos, or scripts that the HTML makes reference to,
+separate HTTP `GET` requests are made for those as well.
+
+
+
+## Requests Without a Browser
+
+Programs, like `curl`, can also issue HTTP requests
+
+Note: Instead of rendering the page, they simply print out the HTML returned in
+the HTTP response
+
+
+
+
+## `curl` is a Program Talking To a Program
+
+`curl` talks to the webserver, using a public API (via HTTP)
+
+
+
+## Expose Yourself
+
+A REST API exposes your internal system to the outside world
+
+
+
+
+
+## Expose Yourself (continued)
+
+It's also a fantastic way to make a system available to other, internal systems
+within an organization.
+
+Note: HTTP clients exist for every language immaginable
+
+
+
+
+
+## Expose Yourself (continued)
+
+Examples of popular REST APIs:
+
+* Twitter
+* GitHub
+* Google (for almost all services)
+
+
+
+
+## REST APIs Are Now Table Stakes For SaaS
+
+If you're a SaaS provider, you are expected to have a REST API for people to
+write programs to interact with your service.
+
+Note: Doesn't matter if this was ever your intention or not. You're expected to
+have one and thus mus spend time and money developing it, lest you look silly by
+not having one.
+
 
 
 
