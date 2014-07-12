@@ -229,7 +229,7 @@ and ORMs reliance on traditional SQL.
 ## Short Aside: The Web Framework Impedance Mismatch
 
 The more time you spend building REST APIs with web frameworks, the more you'll
-notice the subtle (and at time, glaring) impedance mismatch. 
+notice the subtle (and at times, glaring) impedance mismatch. 
 
 Examples:
 
@@ -418,7 +418,7 @@ heavily built on the notion of resources and collections. In our case,
 the *collection* of tweets is a list of all tweets in the system. 
 
 The `tweet` collection is accessed by the following URL (according to our rules,
-described earlier): `/tweets/`. 
+described earlier): `/tweets`. 
 
 Note: Looks like a folder on a file system. Not a coincidence.
 
@@ -431,7 +431,7 @@ Note: Looks like a folder on a file system. Not a coincidence.
 ```python
     from twitter.models import Tweet, User
 
-    @app.route('/tweets/', methods=['GET'])
+    @app.route('/tweets', methods=['GET'])
     def get_tweet_collection():
         """Return all tweets as JSON."""
         all_tweets = []
@@ -482,7 +482,7 @@ problem.
 
 
 
-## Enter `Flask-Sandboy`
+## Enter `Sandboy`
 
 Third party Flask extension written by the dashing Jeff Knupp.
 Define your models. Hit a button. BAM! RESTful API service that *just works*.
@@ -491,7 +491,8 @@ Define your models. Hit a button. BAM! RESTful API service that *just works*.
 
 Note: This isn't meant to create the REST API for Twitter or GitHub, both of
 which are complex and expertly designed. This is meant to create the REST API
-for XYZ corp who just needs to get it out the door quickly.
+for XYZ corp who just needs to get it out the door quickly. All Flask extensions
+are officially named Flask-Name, so this is really Flask-Sandboy.
 
 
 
@@ -541,7 +542,7 @@ def _all_resources(self):
         {'resources': [resource.to_dict() for resource in resources]})
 ```
 
-Note: `page` is used for pagination, or limiting the number of results returned
+Note: `page` is used for pagination, i.e. limiting the number of results returned
 and providing a `next` and `previous` link to get the next or previous set of
 results.
 
@@ -654,6 +655,14 @@ is totally registered with Flask and ready to be used.
 
 ## Let's Use This Puppy!
 
+Let's play pretend again. Now we're a IaaS company that lets users build private
+clouds. We'll focus on two resources: `cloud` and `machine`
+
+
+
+
+## Let's Use This Puppy! (continued)
+
 ```python
 class Cloud(db.Model):
     __tablename__ = 'cloud'
@@ -724,7 +733,7 @@ what if:
 Only downside of `Flask-Sandboy` is you have to define your model classes
 explicitly. If you have a lot of models, this would be tedious. 
 
-...I don't do tedious
+...I don't do tedious  <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
 
@@ -733,7 +742,7 @@ explicitly. If you have a lot of models, this would be tedious.
 ## It's 2014...
 
 We have private companies building rocket ships and electric cars. Why can't we
-have a tool that you point at a database and hit a button, then, BLAM! RESTful
+have a tool that you point at an existing database and hit a button, then, BLAM! RESTful
 API service.
 
 
@@ -825,6 +834,13 @@ Server: Werkzeug/0.9.6 Python/2.7.6
 
 
 
+## Demo Time!
+
+And now for a (probably broken) live-demo!
+
+
+
+
 
 ## Exploring the API
 
@@ -873,7 +889,7 @@ simply to add method specific validation, behavior, and authentication.
 ## Sandman and Flask-Sandboy
 
 `sandman` came first. Has been number one Python project on GitHub twice and
-is downloaded 25,000 a month. Flask-Sandboy is `sandman`'s little brother...
+is downloaded 25,000 times a month. Flask-Sandboy is `sandman`'s little brother...
 
 Note: Hopefully now the name makes sense
 
@@ -889,7 +905,7 @@ Note: Hopefully now the name makes sense
 
 
 
-## Prefer Code Generation To Hand-written Code
+## Prefer Code Generation To Hand-Written Code
 
 * Work at higher level of abstraction
 * Solve a problem once in a generic manner
@@ -900,7 +916,7 @@ In general: **automate everything**
 
 
 
-## Compose Well-Made Tools To Create New Ones
+## Library Building By Composing Well-Made Libraries 
 
 * `sandman` = Flask + SQLAlchemy + Lots of Glue
 * Requires you know the capabilities of your tools
