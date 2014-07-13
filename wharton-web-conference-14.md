@@ -18,6 +18,21 @@
 
 
 
+## In This Talk...
+
+We're going to use Python to *automatically* generate a REST API. And we're
+going to do it without requiring a single line of code being written.
+
+
+
+
+## But First...
+
+We'll go over what a REST API is, how it works, and why it's useful.
+
+
+
+
 ## Let's Talk About REST APIs
 
 Seven letters. Two acronyms. Buy what does it mean?
@@ -166,9 +181,11 @@ the HTTP response
 
 
 
+
 ## `curl` is a Program Talking To a Program
 
 `curl` talks to the webserver, using a public API (via HTTP)
+
 
 
 
