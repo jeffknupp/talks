@@ -506,7 +506,8 @@ from models import Tweet, User
 def create_tweet():
     """Create a new tweet object based on the JSON data sent
     in the request."""
-    if not all(('content', 'posted_at', 'user_id' in request.json)):
+    required_names = ('content', 'posted_at', 'user_id')
+    if not all((name in request.json for name in required_names)):
         response = jsonify({'result': 'ERROR'})
         response.status_code = 400  # HTTP 400: BAD REQUEST
         return response
