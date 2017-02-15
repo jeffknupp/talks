@@ -54,9 +54,9 @@ newcomers to write idiomatic Python.**</p>
 
 ## I have some questions...
 
-* What the hell does 'idiomatic Python' mean
-* How the hell do I write it
-* Why the hell should I care
+* What does 'idiomatic Python' mean?
+* How do I write it?
+* Why should I care?
 
 
 
@@ -73,13 +73,11 @@ newcomers to write idiomatic Python.**</p>
 
 *Adjective*
 
-```
-Code written in the way the Python community has agreed it should be written.
-```
+> Code written in the way the Python community has agreed it should be written.
 
-Usage- “The way you use a for loop to find a dictionary entry by comparing each key in sequence isn’t very Pythonic”
+Example Usage: “The way you use a for loop to find a dictionary entry by comparing each key in sequence isn’t very Pythonic”
 
-*Synonyms*: **idiomatic**
+Synonyms: **idiomatic**
 
 
 
@@ -205,8 +203,10 @@ reading a Moby Dick, watching an episode of Law and Order.
 Well, let's put it this way:
 
     
-    “Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.”
---John Woods, comp.lang.c++
+
+> “Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.”
+
+-John Woods, comp.lang.c++
 
 
 
