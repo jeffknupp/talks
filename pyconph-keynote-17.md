@@ -24,31 +24,31 @@ PyConPH 2017
 ## What's the format for this talk?
 
 
-Was going to be a dynamic, interactive, question and answer style *conversation*
+I've always wanted to give this talk as a dynamic, question and answer style *conversation*
 that naturally led to us discussing interesting things
 
-<p class="fragment roll-in">Then I realized you guys would probably not ask the exact questions I need you to</p>
+<p class="fragment roll-in">So today I'll be using the power of imaginary science to let **me from 10 years ago**, who we'll
+call *n00b Jeff*, help us out</p>
+<p class="fragment roll-in">He just started programming professionally a few years ago, think he knows everything (but
+doesn't), and usually ignores good advice. **But at he's curious and will ask questions.**</p>
 
-<p class="fragment roll-in">So I took the liberty of asking the questions for you</p>
 
 
 
-
-## What’s this about, anyway?	
+## n00b Jeff: What’s this about, anyway?	
 
 <p class="fragment roll-in">It's about writing idiomatic Python, of course!</p>
 
 
 
-## OK, well then what's the point of all this?
+## n00b Jeff: OK, well then what's the point of this talk?
 
 Python is only getting *more* popular. That's great. But learning to write code
 in an idiomatic fashion is *vital* both to your success *and* the language's.
 
 <p class="fragment roll-in">If you want Python's popularity to continue to grow, **write Pythonic code that newcomers can follow.**</p>
 
-<p class="fragment roll-in">If you don't want to every Python job for the next 20 years to be maintaining legacy code no one understands, **teach
-newcomers to write idiomatic Python.**</p>
+<p class="fragment roll-in">If you don't want to every Python job for the next 20 years to be maintaining legacy code no one understands, **teach newcomers to write idiomatic Python.**</p>
 
 
 
